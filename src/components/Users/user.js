@@ -7,7 +7,6 @@ export const User = ({user}) => {
             <h2>{user.username}</h2>
             <p>Name: {user.firstname} {user.lastname}</p>
             <p>Location: {user.location}</p>
-            <p>Cool image: {user.image}</p>
         </UserWrapper>
     );
 }
