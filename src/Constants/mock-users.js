@@ -4,13 +4,13 @@ export const mockUsers = [
         firstname: "Henrik",
         lastname: "Fridström",
         location: "Sweden",
-        image: ""
+        image: "https://assets1.ignimgs.com/2019/01/11/avatar3d-1280-1547246301612_1280w.jpg"
     },
     {
-        username: "Sebbbe",
+        username: "Sebbe",
         firstname: "Sebastian",
         lastname: "Uddén",
         location: "Sweden",
-        image: ""
+        image: "https://movies4maniacs.liberty.me/wp-content/uploads/sites/1218/2015/09/avatarsucks.jpg"
     }
 ];

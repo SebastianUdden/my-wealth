@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import { colors } from "../../Constants/colors"
 
 export const User = ({user}) => {
     return (
@@ -12,7 +13,7 @@ export const User = ({user}) => {
 }
 
 const UserWrapper = styled.div`
-    background-color: #333;
+    background-color: ${colors.darkGrey};
     padding: 1rem;
     margin: 1rem;
 `;
