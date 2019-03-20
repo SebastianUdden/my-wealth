@@ -1,58 +1,60 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import { LoginForm } from "../components/Login/loginForm"
-import { Users } from "../components/Users/users"
-import { Chat } from "../components/Chat/chat"
-import { colors } from "../Constants/colors"
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { colors } from '../constants/colors';
+import { Chat } from './chat/Chat';
+import { LoginForm } from './login/LoginForm';
+import { Users } from './users/Users';
 
 export const Main = () => {
-    const [tab, setTab] = useState('Chat');
-    const [loggedIn, setLoggedin] = useState(false);
+  const [tab, setTab] = useState('Chat');
+  const [loggedIn, setLoggedIn] = useState(true);
 
-    return (
+  return (
+    <>
+      {!loggedIn && (
+        <MainWrapper>
+          <LoginForm setLoggedIn={setLoggedIn} />
+        </MainWrapper>
+      )}
+      {loggedIn && (
         <>
-            {!loggedIn && 
-                <MainWrapper>
-                    <LoginForm setLoggedin={setLoggedin} />
-                </MainWrapper>}
-            {loggedIn && (
-                <>
-                    <TabWrapper>
-                        <Tab onClick={() => setTab('Users')}>Users</Tab>
-                        <Tab onClick={() => setTab('Chat')}>Chat</Tab>
-                    </TabWrapper>
-                    <MainWrapper>
-                        {tab === 'Users' && <Users />}
-                        {tab === 'Chat' && <Chat />}
-                    </MainWrapper>
-                </>
-            )}
+          <TabWrapper>
+            <Tab onClick={() => setTab('Users')}>Users</Tab>
+            <Tab onClick={() => setTab('Chat')}>Chat</Tab>
+          </TabWrapper>
+          <MainWrapper>
+            {tab === 'Users' && <Users setLoggedIn={setLoggedIn} />}
+            {tab === 'Chat' && <Chat setLoggedIn={setLoggedIn} />}
+          </MainWrapper>
         </>
-    )
-}
-
+      )}
+    </>
+  );
+};
 
 const MainWrapper = styled.div`
-    color: ${colors.white};
-    display: flex;
-    justify-content: center;
+  color: ${colors.white};
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
 `;
 
 const TabWrapper = styled.div`
-    display: flex;
-    justify-content: stretch;
+  display: flex;
+  justify-content: stretch;
 `;
 
 const Tab = styled.button`
-    background-color: ${colors.darkGrey};
-    color: ${colors.white};
-    width: 100%;
-    padding: 0.8rem;
-    margin: 1rem 0.5rem;
-    border: none;
+  background-color: ${colors.darkGrey};
+  color: ${colors.white};
+  width: 100%;
+  padding: 0.8rem 0;
+  margin: 1rem 0.5rem;
+  border: none;
 
-    :hover {
-        background-color: ${colors.grey};
-        cursor: pointer;
-    }
+  :hover {
+    background-color: ${colors.grey};
+    cursor: pointer;
+  }
 `;

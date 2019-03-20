@@ -1,28 +1,73 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import {colors } from "../../Constants/colors"
-import { ChatInput } from "./chatInput"
-import { ChatMessage} from "./chatMessage"
-import { mockUsers } from "../../Constants/mock-users"
-import { mockMessages } from "../../Constants/mock-messages"
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { get } from '../../utils/api';
+import { ChatInput } from './ChatInput';
+import { ChatMessage } from './ChatMessage';
+import { localUrl } from '../../constants/urls';
 
-export const Chat = () => {
-    const [messages, setMessages] = useState(mockMessages);
-    console.log('New messages: ', messages);
-    
-    return (
-        <div>
-            <h1>Chat</h1>
-            <ChatBox>
-                <ChatInput currentUser={mockUsers.find(mockUser => localStorage.getItem("username") === mockUser.username)} messages={messages} setMessages={setMessages} />
-                {messages && messages.map(message => <ChatMessage message={message} />)}
-            </ChatBox>
-        </div>
-    )
-}
+export const Chat = ({ setLoggedIn }) => {
+  const [messages, setMessages] = useState(undefined);
+  const [users, setUsers] = useState([]);
+  const [dbUpdate, setDbUpdate] = useState(false);
 
+  useEffect(() => {
+    if (
+      users &&
+      Array.isArray(users) &&
+      users.length !== 0 &&
+      !users.find(user => localStorage.getItem('username') === user.username)
+    ) {
+      setLoggedIn(false);
+    }
+    get(`${localUrl}/api/messages`).then(messages => {
+      setMessages(messages);
+    });
+    get(`${localUrl}/api/users`).then(users => {
+      setUsers(users);
+    });
+  }, [dbUpdate]);
+  console.log('messages: ', messages);
+
+  return (
+    <ChatWrapper>
+      <ChatBox>
+        {messages &&
+          Array.isArray(messages) &&
+          messages.map(message => (
+            <ChatMessage
+              key={message.id}
+              message={message}
+              setDbUpdate={setDbUpdate}
+              dbUpdate={dbUpdate}
+              currentUser={
+                localStorage.getItem('username') === message.user.username
+              }
+            />
+          ))}
+        <ChatInput
+          currentUser={
+            users &&
+            Array.isArray(users) &&
+            users.find(
+              user => localStorage.getItem('username') === user.username
+            )
+          }
+          messages={messages}
+          setMessages={setMessages}
+          setDbUpdate={setDbUpdate}
+          dbUpdate={dbUpdate}
+        />
+      </ChatBox>
+    </ChatWrapper>
+  );
+};
+
+const ChatWrapper = styled.div`
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  padding: 0.5rem 0.8rem 4rem;
+`;
 const ChatBox = styled.div`
-    background-color: ${colors.grey};
-    min-height: 50vh;
-    padding: 2rem 2rem 4rem;
-`;  
+  min-height: 50vh;
+`;

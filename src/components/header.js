@@ -1,13 +1,12 @@
-import { Link } from "gatsby"
-import PropTypes from "prop-types"
-import React from "react"
-import { colors } from "../Constants/colors"
+import { Link } from 'gatsby';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { colors } from '../constants/colors';
 
 const Header = ({ siteTitle }) => (
   <header
     style={{
       background: colors.black,
-      marginBottom: `1.45rem`,
     }}
   >
     <div
@@ -27,17 +26,29 @@ const Header = ({ siteTitle }) => (
         >
           {siteTitle}
         </Link>
+        {/* <span
+          style={{
+            color: colors.white,
+            textDecoration: `none`,
+          }}
+          onClick={() => {
+            localStorage.removeItem('password');
+            localStorage.removeItem('username');
+          }}
+        >
+          Sign out
+        </span> */}
       </h1>
     </div>
   </header>
-)
+);
 
 Header.propTypes = {
   siteTitle: PropTypes.string,
-}
+};
 
 Header.defaultProps = {
   siteTitle: ``,
-}
+};
 
-export default Header
+export default Header;
