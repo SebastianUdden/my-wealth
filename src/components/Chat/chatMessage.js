@@ -7,16 +7,18 @@ import { localUrl } from '../../constants/urls';
 
 export const ChatMessage = ({
   message,
+  users,
   setDbUpdate,
   dbUpdate,
   currentUser,
 }) => {
   const [clicked, setClicked] = useState(false);
+  const user = users && users.find(user => user._id === message.user);
 
   return (
     <>
       <ChatMessageWrapper currentUser={currentUser}>
-        <Avatar currentUser={currentUser} image={message.user.image} />
+        <Avatar currentUser={currentUser} image={user && user.image} />
         <div>
           {!currentUser && <Username>{message.user.username}</Username>}
           <Message
@@ -28,7 +30,7 @@ export const ChatMessage = ({
             {currentUser && clicked && (
               <Delete
                 onClick={() => {
-                  remove(`${localUrl}/api/messages/${message.id}`).then(
+                  remove(`${localUrl}/messages/${message._id}`).then(
                     response => {
                       console.log('response: ', response);
                       setDbUpdate(!dbUpdate);
@@ -40,7 +42,9 @@ export const ChatMessage = ({
               </Delete>
             )}
           </Message>
-          <CreatedAt>{message.createdAt}</CreatedAt>
+          <CreatedAt>
+            {message.createdAt && new Date(message.createdAt).toLocaleString()}
+          </CreatedAt>
         </div>
       </ChatMessageWrapper>
     </>

@@ -14,7 +14,7 @@ export const ChatInput = ({ currentUser, setDbUpdate, dbUpdate, messages }) => {
 
   if (enterPress && !doOnce && value) {
     setDoOnce(true);
-    create(`${localUrl}/api/messages`, {
+    create(`${localUrl}/messages`, {
       id: messages.length + 1,
       user: currentUser,
       text: value,
@@ -44,11 +44,10 @@ export const ChatInput = ({ currentUser, setDbUpdate, dbUpdate, messages }) => {
           onClick={() => {
             if (value && !doOnce) {
               setDoOnce(true);
-              create(`${localUrl}/api/messages`, {
+              create(`${localUrl}/messages`, {
                 id: messages.length + 1,
                 user: currentUser,
                 text: value,
-                createdAt: new Date().toLocaleString(),
               }).then(response => {
                 console.log('response: ', response);
                 setDbUpdate(!dbUpdate);

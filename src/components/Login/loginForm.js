@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { get } from '../../utils/api';
 import { LoginInput } from './LoginInput';
 import { colors } from '../../constants/colors';
+import { localUrl } from '../../constants/urls';
 
 export const LoginForm = ({ setLoggedIn }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [users, setUsers] = useState('');
+  const [loginAttempt, setLoginAttempt] = useState(0);
+
+  useEffect(() => {
+    get(`${localUrl}/users`).then(users => {
+      console.log('Login-users: ', users);
+      setUsers(users);
+    });
+  }, [loginAttempt]);
 
   return (
     <LoginFormWrapper>
@@ -22,9 +33,17 @@ export const LoginForm = ({ setLoggedIn }) => {
         value={password}
         setValue={setPassword}
       />
-      <LoginButton onClick={() => HandleLogin(username, password, setLoggedIn)}>
+      <LoginButton
+        onClick={() => {
+          setLoginAttempt(loginAttempt + 1);
+          HandleLogin(username, password, setLoggedIn, users);
+        }}
+      >
         Login
       </LoginButton>
+      {loginAttempt > 0 && (
+        <p style={{ color: 'red' }}>Invalid login ({loginAttempt})</p>
+      )}
     </LoginFormWrapper>
   );
 };
@@ -45,17 +64,12 @@ const LoginButton = styled.button`
   }
 `;
 
-const HandleLogin = (username, password, setLoggedIn) => {
-  const lsUsername = localStorage.getItem('username');
-  const lsPassword = localStorage.getItem('password');
-  if (!lsUsername && !lsPassword) {
+const HandleLogin = (username, password, setLoggedIn, users) => {
+  localStorage.clear();
+  if (users.find(user => user.username === username)) {
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
     setLoggedIn(true);
-    console.log('loggedIn, setting');
-  } else if (lsUsername === username && lsPassword === password) {
-    setLoggedIn(true);
-    console.log('loggedIn, set');
   } else {
     setLoggedIn(false);
     console.log('not loggedIn, set');

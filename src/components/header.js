@@ -26,18 +26,17 @@ const Header = ({ siteTitle }) => (
         >
           {siteTitle}
         </Link>
-        {/* <span
+        <span
           style={{
             color: colors.white,
             textDecoration: `none`,
           }}
           onClick={() => {
-            localStorage.removeItem('password');
-            localStorage.removeItem('username');
+            localStorage.clear();
           }}
         >
           Sign out
-        </span> */}
+        </span>
       </h1>
     </div>
   </header>

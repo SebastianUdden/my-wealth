@@ -7,14 +7,13 @@ export const Users = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    get(`${localUrl}/api/users`).then(users => {
+    get(`${localUrl}/users`).then(users => {
       setUsers(users);
     });
   }, []);
 
   return (
     <div>
-      <h1>Users</h1>
       {users &&
         Array.isArray(users) &&
         users.map(user => {

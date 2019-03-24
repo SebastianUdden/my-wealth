@@ -19,31 +19,39 @@ export const Chat = ({ setLoggedIn }) => {
     ) {
       setLoggedIn(false);
     }
-    get(`${localUrl}/api/messages`).then(messages => {
+    get(`${localUrl}/messages`).then(messages => {
+      console.log('messages: ', messages);
+
       setMessages(messages);
     });
-    get(`${localUrl}/api/users`).then(users => {
+    get(`${localUrl}/users`).then(users => {
       setUsers(users);
     });
   }, [dbUpdate]);
-  console.log('messages: ', messages);
 
   return (
     <ChatWrapper>
       <ChatBox>
         {messages &&
           Array.isArray(messages) &&
-          messages.map(message => (
-            <ChatMessage
-              key={message.id}
-              message={message}
-              setDbUpdate={setDbUpdate}
-              dbUpdate={dbUpdate}
-              currentUser={
-                localStorage.getItem('username') === message.user.username
-              }
-            />
-          ))}
+          messages.map(message => {
+            const currentUser =
+              users && users.find(user => user._id === message.user);
+
+            return (
+              <ChatMessage
+                key={message.id}
+                message={message}
+                users={users}
+                setDbUpdate={setDbUpdate}
+                dbUpdate={dbUpdate}
+                currentUser={
+                  localStorage.getItem('username') ===
+                  (currentUser && currentUser.username)
+                }
+              />
+            );
+          })}
         <ChatInput
           currentUser={
             users &&

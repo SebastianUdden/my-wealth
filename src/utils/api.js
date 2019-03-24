@@ -1,10 +1,14 @@
 import axios from 'axios';
 
 export const get = async url => {
+  console.log('url: ', url);
+
   const value = await axios
     .get(url)
     .then(response => {
-      return response && response.data && response.data.items;
+      console.log('response: ', response);
+
+      return response && response.data;
     })
     .catch(error => {
       console.log('error: ', error);
@@ -18,7 +22,7 @@ export const create = async (url, body) => {
     .post(url, body)
     .then(response => {
       console.log('response: ', response);
-      return response && response.data && response.data.items;
+      return response && response.data && response.data;
     })
     .catch(error => {
       console.log('error: ', error);
@@ -36,7 +40,7 @@ export const remove = async url => {
     .delete(url)
     .then(response => {
       console.log('response: ', response);
-      return response && response.data && response.data.items;
+      return response && response.data && response.data;
     })
     .catch(error => {
       console.log('error: ', error);
