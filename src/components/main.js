@@ -13,9 +13,10 @@ export const Main = () => {
   const [users, setUsers] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [signup, setSignup] = useState(false);
+  const [token, setToken] = useState(undefined);
 
   useEffect(() => {
-    const token = localStorage.getItem('username');
+    setToken(localStorage.getItem('username'));
     get(`${apiUrl}/users`, token).then(users => {
       setUsers(users);
       setLoggedIn(
