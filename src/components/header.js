@@ -26,7 +26,7 @@ const Header = ({ siteTitle }) => (
         >
           {siteTitle}
         </Link>
-        <span
+        {/* <span
           style={{
             color: colors.white,
             textDecoration: `none`,
@@ -36,7 +36,7 @@ const Header = ({ siteTitle }) => (
           }}
         >
           Sign out
-        </span>
+        </span> */}
       </h1>
     </div>
   </header>

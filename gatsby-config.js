@@ -1,7 +1,8 @@
 module.exports = {
+  pathPrefix: '/my-web-tools',
   siteMetadata: {
     title: `MyChat`,
-    description: `Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.`,
+    description: `The modular web tools, started with a chat.`,
     author: `@gatsbyjs`,
   },
   plugins: [

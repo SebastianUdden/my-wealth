@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import { colors } from '../../constants/colors'
+import React from 'react';
+import styled from 'styled-components';
+import { colors } from '../../constants/colors';
 
 export const LoginInput = ({ placeholder, type, value, setValue }) => {
   return (
@@ -10,8 +10,8 @@ export const LoginInput = ({ placeholder, type, value, setValue }) => {
       value={value}
       onChange={e => setValue(e.target.value)}
     />
-  )
-}
+  );
+};
 
 const Input = styled.input`
   display: flex;
@@ -22,4 +22,4 @@ const Input = styled.input`
   color: ${colors.white};
   margin: 1rem;
   padding: 0.5rem;
-`
+`;

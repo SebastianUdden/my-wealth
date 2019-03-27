@@ -1,1 +1,1 @@
-export const localUrl = 'http://127.0.0.1:3000';
+export const apiUrl = process.env.GATSBY_API_URL;

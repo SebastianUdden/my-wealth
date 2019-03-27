@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
 import { get } from '../../utils/api';
 import { LoginInput } from './LoginInput';
 import { colors } from '../../constants/colors';
-import { localUrl } from '../../constants/urls';
+import { apiUrl } from '../../constants/urls';
 
-export const LoginForm = ({ setLoggedIn }) => {
+export const LoginForm = ({ setLoggedIn, setSignup }) => {
+  const [showLogin, setShowLogin] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [users, setUsers] = useState('');
   const [loginAttempt, setLoginAttempt] = useState(0);
 
   useEffect(() => {
-    get(`${localUrl}/users`).then(users => {
+    setTimeout(() => setShowLogin(true), 200);
+  }, []);
+  useEffect(() => {
+    get(`${apiUrl}/users`).then(users => {
       console.log('Login-users: ', users);
       setUsers(users);
     });
@@ -20,35 +25,43 @@ export const LoginForm = ({ setLoggedIn }) => {
 
   return (
     <LoginFormWrapper>
-      <h1>Login</h1>
-      <LoginInput
-        placeholder="Username"
-        type="text"
-        value={username}
-        setValue={setUsername}
-      />
-      <LoginInput
-        placeholder="Password"
-        type="password"
-        value={password}
-        setValue={setPassword}
-      />
-      <LoginButton
-        onClick={() => {
-          setLoginAttempt(loginAttempt + 1);
-          HandleLogin(username, password, setLoggedIn, users);
-        }}
-      >
-        Login
-      </LoginButton>
-      {loginAttempt > 0 && (
-        <p style={{ color: 'red' }}>Invalid login ({loginAttempt})</p>
+      {showLogin && (
+        <>
+          <h1>Login</h1>
+          <LoginInput
+            placeholder="Username"
+            type="text"
+            value={username}
+            setValue={setUsername}
+          />
+          <LoginInput
+            placeholder="Password"
+            type="password"
+            value={password}
+            setValue={setPassword}
+          />
+          <LoginButton
+            onClick={() => {
+              setLoginAttempt(loginAttempt + 1);
+              HandleLogin(username, password, setLoggedIn, users);
+            }}
+          >
+            Login
+          </LoginButton>
+          {loginAttempt > 0 && (
+            <p style={{ color: 'red' }}>Invalid login ({loginAttempt})</p>
+          )}
+          <p>
+            Sign up <Signup onClick={() => setSignup(true)}>here</Signup>
+          </p>
+        </>
       )}
     </LoginFormWrapper>
   );
 };
 
 const LoginFormWrapper = styled.div`
+  margin-top: 1rem;
   text-align: center;
 `;
 
@@ -64,9 +77,21 @@ const LoginButton = styled.button`
   }
 `;
 
+const Signup = styled.span`
+  color: orange;
+
+  :hover {
+    color: white;
+    cursor: pointer;
+  }
+`;
+
 const HandleLogin = (username, password, setLoggedIn, users) => {
   localStorage.clear();
-  if (users.find(user => user.username === username)) {
+  if (
+    users &&
+    users.find(user => user.username === username && user.password === password)
+  ) {
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
     setLoggedIn(true);

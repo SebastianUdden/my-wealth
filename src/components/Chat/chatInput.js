@@ -2,30 +2,43 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { colors } from '../../constants/colors';
 import { create } from '../../utils/api';
-import { localUrl } from '../../constants/urls';
+import { apiUrl } from '../../constants/urls';
 import { ResizableTextarea } from './ResizableTextarea';
 import { useKeyPress } from '../../hooks/useKeyPress';
 
-export const ChatInput = ({ currentUser, setDbUpdate, dbUpdate, messages }) => {
+const scrollToBottom = (setValue, setRows) => {
+  setTimeout(() => {
+    setValue('');
+    setRows(1);
+    window.scrollTo(0, document.body.scrollHeight);
+  }, 100);
+};
+
+export const ChatInput = ({ userId, setDbUpdate, dbUpdate, token }) => {
   const [value, setValue] = useState('');
   const [rows, setRows] = useState(1);
   const [doOnce, setDoOnce] = useState(false);
   const enterPress = useKeyPress('Enter');
 
+  useEffect(() => {
+    setTimeout(() => scrollToBottom(setValue, setRows), 200);
+  }, []);
+
   if (enterPress && !doOnce && value) {
     setDoOnce(true);
-    create(`${localUrl}/messages`, {
-      id: messages.length + 1,
-      user: currentUser,
-      text: value,
-      createdAt: new Date().toLocaleString(),
-    }).then(response => {
-      console.log('response: ', response);
+    create(
+      `${apiUrl}/messages`,
+      {
+        text: value,
+        user: userId,
+      },
+      token
+    ).then(response => {
+      console.log('userId: ', userId);
+      console.log('CHAT-CREATE-KEYPRESS-response: ', response);
       setDbUpdate(!dbUpdate);
       document.getElementById('ChatInput').focus();
-      setValue('');
-      setRows(1);
-      setTimeout(() => window.scrollTo(0, document.body.scrollHeight), 25);
+      setTimeout(() => scrollToBottom(setValue, setRows), 200);
       setTimeout(() => setDoOnce(false), 1000);
     });
   }
@@ -44,19 +57,19 @@ export const ChatInput = ({ currentUser, setDbUpdate, dbUpdate, messages }) => {
           onClick={() => {
             if (value && !doOnce) {
               setDoOnce(true);
-              create(`${localUrl}/messages`, {
-                id: messages.length + 1,
-                user: currentUser,
-                text: value,
-              }).then(response => {
-                console.log('response: ', response);
+              create(
+                `${apiUrl}/messages`,
+                {
+                  text: value,
+                  user: userId,
+                },
+                token
+              ).then(response => {
+                console.log('userId: ', userId);
+                console.log('CHAT-CREATE-BUTTON-response: ', response);
                 setDbUpdate(!dbUpdate);
                 document.getElementById('ChatInput').focus();
-                setTimeout(() => {
-                  setRows(1);
-                  setValue('');
-                  window.scrollTo(0, document.body.scrollHeight);
-                }, 25);
+                setTimeout(() => scrollToBottom(setValue, setRows), 200);
               });
             }
           }}

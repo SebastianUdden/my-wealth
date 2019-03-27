@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { colors } from '../../constants/colors';
 import { Avatar } from '../users/Avatar';
 import { remove } from '../../utils/api';
-import { localUrl } from '../../constants/urls';
+import { apiUrl } from '../../constants/urls';
 
 export const ChatMessage = ({
   message,
@@ -11,6 +11,7 @@ export const ChatMessage = ({
   setDbUpdate,
   dbUpdate,
   currentUser,
+  token,
 }) => {
   const [clicked, setClicked] = useState(false);
   const user = users && users.find(user => user._id === message.user);
@@ -20,7 +21,7 @@ export const ChatMessage = ({
       <ChatMessageWrapper currentUser={currentUser}>
         <Avatar currentUser={currentUser} image={user && user.image} />
         <div>
-          {!currentUser && <Username>{message.user.username}</Username>}
+          {!currentUser && <Username>{user && user.username}</Username>}
           <Message
             empty={!message.text || !message.text.trim()}
             currentUser={currentUser}
@@ -30,7 +31,7 @@ export const ChatMessage = ({
             {currentUser && clicked && (
               <Delete
                 onClick={() => {
-                  remove(`${localUrl}/messages/${message._id}`).then(
+                  remove(`${apiUrl}/messages/${message._id}`, token).then(
                     response => {
                       console.log('response: ', response);
                       setDbUpdate(!dbUpdate);

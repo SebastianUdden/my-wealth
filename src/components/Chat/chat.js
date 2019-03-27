@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { get } from '../../utils/api';
+import { apiUrl } from '../../constants/urls';
 import { ChatInput } from './ChatInput';
 import { ChatMessage } from './ChatMessage';
-import { localUrl } from '../../constants/urls';
 
-export const Chat = ({ setLoggedIn }) => {
+export const Chat = ({ users, setLoggedIn, token }) => {
   const [messages, setMessages] = useState(undefined);
-  const [users, setUsers] = useState([]);
   const [dbUpdate, setDbUpdate] = useState(false);
+  const currentUser =
+    users &&
+    users.find(user => localStorage.getItem('username') === user.username);
+  console.log('currentUser: ', currentUser);
 
   useEffect(() => {
     if (
@@ -19,13 +22,10 @@ export const Chat = ({ setLoggedIn }) => {
     ) {
       setLoggedIn(false);
     }
-    get(`${localUrl}/messages`).then(messages => {
+    get(`${apiUrl}/messages`, token).then(messages => {
       console.log('messages: ', messages);
 
       setMessages(messages);
-    });
-    get(`${localUrl}/users`).then(users => {
-      setUsers(users);
     });
   }, [dbUpdate]);
 
@@ -40,7 +40,7 @@ export const Chat = ({ setLoggedIn }) => {
 
             return (
               <ChatMessage
-                key={message.id}
+                key={message._id}
                 message={message}
                 users={users}
                 setDbUpdate={setDbUpdate}
@@ -49,21 +49,17 @@ export const Chat = ({ setLoggedIn }) => {
                   localStorage.getItem('username') ===
                   (currentUser && currentUser.username)
                 }
+                token={token}
               />
             );
           })}
         <ChatInput
-          currentUser={
-            users &&
-            Array.isArray(users) &&
-            users.find(
-              user => localStorage.getItem('username') === user.username
-            )
-          }
+          userId={currentUser && currentUser._id}
           messages={messages}
           setMessages={setMessages}
           setDbUpdate={setDbUpdate}
           dbUpdate={dbUpdate}
+          token={token}
         />
       </ChatBox>
     </ChatWrapper>
