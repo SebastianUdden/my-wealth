@@ -14,7 +14,7 @@ const scrollToBottom = (setValue, setRows) => {
   }, 100);
 };
 
-export const ChatInput = ({ userId, setDbUpdate, dbUpdate, token }) => {
+export const ChatInput = ({ userId, setDbUpdate, dbUpdate, currentUser }) => {
   const [value, setValue] = useState('');
   const [rows, setRows] = useState(1);
   const [doOnce, setDoOnce] = useState(false);
@@ -32,7 +32,7 @@ export const ChatInput = ({ userId, setDbUpdate, dbUpdate, token }) => {
         text: value,
         user: userId,
       },
-      token
+      currentUser.username
     ).then(response => {
       console.log('userId: ', userId);
       console.log('CHAT-CREATE-KEYPRESS-response: ', response);
@@ -63,7 +63,7 @@ export const ChatInput = ({ userId, setDbUpdate, dbUpdate, token }) => {
                   text: value,
                   user: userId,
                 },
-                token
+                currentUser.username
               ).then(response => {
                 console.log('userId: ', userId);
                 console.log('CHAT-CREATE-BUTTON-response: ', response);

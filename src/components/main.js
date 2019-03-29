@@ -11,33 +11,39 @@ import { apiUrl } from '../constants/urls';
 export const Main = () => {
   const [tab, setTab] = useState('Chat');
   const [users, setUsers] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(undefined);
   const [signup, setSignup] = useState(false);
-  const [token, setToken] = useState(undefined);
 
   useEffect(() => {
-    setToken(localStorage.getItem('username'));
-    get(`${apiUrl}/users`, token).then(users => {
+    get(`${apiUrl}/users`, 'Unauthorized').then(users => {
       setUsers(users);
-      setLoggedIn(
-        users.find(user => user.username === localStorage.getItem('username'))
+      setCurrentUser(
+        users.find(
+          user =>
+            user.username === localStorage.getItem('username') &&
+            user.password === localStorage.getItem('password')
+        )
       );
     });
-  }, []);
+  }, [currentUser]);
 
   return (
     <>
-      {!loggedIn && !signup && (
+      {!currentUser && !signup && (
         <MainWrapper>
-          <LoginForm setSignup={setSignup} setLoggedIn={setLoggedIn} />
+          <LoginForm setSignup={setSignup} setCurrentUser={setCurrentUser} />
         </MainWrapper>
       )}
-      {!loggedIn && signup && (
+      {!currentUser && signup && (
         <MainWrapper>
-          <SignupForm setLoggedIn={setLoggedIn} setSignup={setSignup} />
+          <SignupForm
+            setCurrentUser={setCurrentUser}
+            currentUser={currentUser}
+            setSignup={setSignup}
+          />
         </MainWrapper>
       )}
-      {loggedIn && (
+      {currentUser && (
         <>
           <TabWrapper>
             <Tab onClick={() => setTab('Users')}>Users</Tab>
@@ -45,7 +51,7 @@ export const Main = () => {
             <Tab
               onClick={() => {
                 localStorage.clear();
-                setLoggedIn(false);
+                setCurrentUser(undefined);
               }}
             >
               Sign Out
@@ -53,11 +59,9 @@ export const Main = () => {
           </TabWrapper>
           <MainWrapper>
             {tab === 'Users' && (
-              <Users users={users} setLoggedIn={setLoggedIn} token={token} />
+              <Users currentUser={currentUser} users={users} />
             )}
-            {tab === 'Chat' && (
-              <Chat users={users} setLoggedIn={setLoggedIn} token={token} />
-            )}
+            {tab === 'Chat' && <Chat users={users} currentUser={currentUser} />}
           </MainWrapper>
         </>
       )}

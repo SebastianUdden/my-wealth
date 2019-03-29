@@ -6,7 +6,7 @@ import { LoginInput } from '../login/LoginInput';
 import { colors } from '../../constants/colors';
 import { apiUrl } from '../../constants/urls';
 
-export const SignupForm = ({ setLoggedIn, setSignup, token }) => {
+export const SignupForm = ({ setSignup }) => {
   const [showSignup, setShowSignup] = useState(false);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ export const SignupForm = ({ setLoggedIn, setSignup, token }) => {
     setTimeout(() => setShowSignup(true), 200);
   }, []);
   useEffect(() => {
-    get(`${apiUrl}/users`, token).then(users => {
+    get(`${apiUrl}/users`, 'Unauthorized').then(users => {
       console.log('Signup-users: ', users);
       setUsers(users);
     });
@@ -88,11 +88,9 @@ export const SignupForm = ({ setLoggedIn, setSignup, token }) => {
                   location,
                   image,
                 },
-                users,
-                token
+                users
               );
               localStorage.clear();
-              setLoggedIn(false);
               setSignup(false);
             }}
           >
@@ -123,7 +121,7 @@ const SignupButton = styled.button`
   }
 `;
 
-const HandleSignup = (signupData, users, token) => {
+const HandleSignup = (signupData, users) => {
   if (
     users &&
     users.find(
@@ -133,7 +131,7 @@ const HandleSignup = (signupData, users, token) => {
   ) {
     return undefined;
   } else {
-    create(`${apiUrl}/users`, signupData, token).then(response => {
+    create(`${apiUrl}/users`, signupData, 'Unauthorized').then(response => {
       console.log('USER-CREATE-response: ', response);
     });
   }

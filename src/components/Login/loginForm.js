@@ -6,7 +6,7 @@ import { LoginInput } from './LoginInput';
 import { colors } from '../../constants/colors';
 import { apiUrl } from '../../constants/urls';
 
-export const LoginForm = ({ setLoggedIn, setSignup }) => {
+export const LoginForm = ({ setCurrentUser, setSignup }) => {
   const [showLogin, setShowLogin] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -43,7 +43,7 @@ export const LoginForm = ({ setLoggedIn, setSignup }) => {
           <LoginButton
             onClick={() => {
               setLoginAttempt(loginAttempt + 1);
-              HandleLogin(username, password, setLoggedIn, users);
+              HandleLogin(username, password, setCurrentUser, users);
             }}
           >
             Login
@@ -86,7 +86,7 @@ const Signup = styled.span`
   }
 `;
 
-const HandleLogin = (username, password, setLoggedIn, users) => {
+const HandleLogin = (username, password, setCurrentUser, users) => {
   localStorage.clear();
   if (
     users &&
@@ -94,9 +94,9 @@ const HandleLogin = (username, password, setLoggedIn, users) => {
   ) {
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
-    setLoggedIn(true);
+    setCurrentUser(username);
   } else {
-    setLoggedIn(false);
-    console.log('not loggedIn, set');
+    setCurrentUser(undefined);
+    console.log('Set loggedIn: false');
   }
 };
